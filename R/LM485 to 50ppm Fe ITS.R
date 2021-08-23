@@ -13,6 +13,7 @@ library("phyloseq")
 library("microbiome")
 library("ape")
 library("ggh4x")
+library("writexl")
 
 ################### Setup ###################
 otudat1 <- read.delim("OTU_ITS_Reads.txt")
@@ -81,6 +82,10 @@ png(filename = "ITS abund pyramid chart purified iron.png", width = 3600, height
 plot(ITSpyramid2)
 dev.off()
 
+Abund.table.purified.ITS <- glom_rel5 %>% select(OTU, Abundance, Mouse, Diet, Kingdom, Phylum, Class, Order, Family, Genus) %>% filter(Abundance > 0) %>% arrange(Mouse, desc(Diet))
+
+write_xlsx(Abund.table.purified.ITS, "Relative Abundance 50ppm ITS Pyramid.xlsx")
+
 ################### Alpha Diversity ###################
 tab_18S_50ppm <- microbiome::alpha(physeq18_Fe, index = "all")
 write.table(tab_18S_50ppm, file = "Alpha Diversity 50ppm ITS.csv", sep = ",")
@@ -120,5 +125,5 @@ citation(package="phyloseq")
 citation(package="microbiome")
 citation(package="ape")
 citation(package="ggh4x")
-
+citation(package="writexl")
 

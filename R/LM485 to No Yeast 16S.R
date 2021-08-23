@@ -10,7 +10,7 @@ library("phyloseq")
 library("microbiome")
 library("ape")
 library("ggh4x")
-
+library("writexl")
 
 ################### Setup ###################
 otudata <- read.delim("Behnsen_OTU 16S_v2 samples.txt")
@@ -78,6 +78,10 @@ png(filename = "16S abund pyramid chart chow 2914.png", width = 3600, height = 2
 plot(pyramid)
 dev.off()
 
+Abund.table.noyeast.16S <- glom_rel1 %>% select(OTU, Abundance, Mouse, Diet, Kingdom, Phylum, Class, Order, Family, Genus) %>% filter(Abundance > 0) %>% arrange(Mouse, desc(Diet))
+
+write_xlsx(Abund.table.noyeast.16S, "Relative Abundance No Yeast 16S Pyramid.xlsx")
+
 ################### Alpha Diversity ###################
 tab_16S_noyeast <- microbiome::alpha(physeq16_noyeast, index = "all")
 write.table(tab_16S_noyeast, file = "Alpha Diversity No Yeast 16S.csv", sep = ",")
@@ -118,4 +122,5 @@ citation(package="phyloseq")
 citation(package="microbiome")
 citation(package="ape")
 citation(package="ggh4x")
+citation(package="writexl")
 

@@ -12,6 +12,7 @@ library("phyloseq")
 library("microbiome")
 library("ape")
 library("ggh4x")
+library("writexl")
 
 ################### Setup ###################
 otudata <- read.delim("Behnsen_OTU 16S_v2 samples.txt")
@@ -78,6 +79,9 @@ pyramid_16S <- ggplot(glom_rel16, aes(x = Mouse, y = AbundInv, fill = Mouse)) +
 png(filename = "16S abund pyramid chart purified iron.png", width = 3600, height = 2400, units = "px", res = 300)
 plot(pyramid_16S)
 dev.off()
+
+Abund.table.purified.16S <- glom_rel16 %>% select(OTU, Abundance, Mouse, Diet, Kingdom, Phylum, Class, Order, Family, Genus) %>% filter(Abundance > 0) %>% arrange(Mouse, desc(Diet))
+write_xlsx(Abund.table.purified.16S, "Relative Abundance 50ppm 16S Pyramid.xlsx")
 
 ################### Alpha Diversity ###################
 tab_16S_50ppm <- microbiome::alpha(physeq16_Fe, index = "all")

@@ -21,7 +21,7 @@ data <- read.delim("SampleData_ITS.txt")
 colnames(data) <- gsub("ITS.Behnsen.MY.", "MY", colnames(data))
 colnames(data) <- gsub("ITS.Negative.Control.sample2", "Negative Control 1", colnames(data))
 colnames(data) <- gsub("ITS.Negative.Ctrl.2.Underhill", "Negative Control 2", colnames(data))
-colnames(data) <- gsub("ITS.Positive.Ctrl.2.Underhill", "Positive 2", colnames(data))
+colnames(data) <- gsub("ITS.Positive.Ctrl.2.Underhill", "Positive Control 2", colnames(data))
 
 asvdata <- data %>% 
   select(!c(Taxonomy))

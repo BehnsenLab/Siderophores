@@ -72,6 +72,12 @@ LM485_50ppm <- c("MY7", "MY8", "MY9", "MY10", "MY11","MY22", "MY23", "MY24", "MY
 physeq16_Fe <- subset_samples(physeq16, (Samples %in% LM485_50ppm))
 
 ################### Theme Setup ###################
+display.brewer.all(colorblindFriendly = TRUE)
+pal <- brewer.pal(n = 12, name = "Paired")
+pal_darker <- pal %>% adjust_luminance(-2)
+pal_lighter <- pal %>% adjust_luminance(2)
+pal_med_dark <- pal %>% adjust_luminance(-1.5)
+
 pyramid.theme <- theme(axis.text.y = element_blank(), 
                        axis.ticks.y = element_blank(),
                        text = element_text(family = "Arial", size = 25), 

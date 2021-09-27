@@ -22,7 +22,7 @@ library("writexl")
 library("tidyr")
 library("stringr")
 
-################### Setup ###################
+################### 16S Phyloseq Object Setup ###################
 data16S <- read.delim("SampleData_16S2.txt")
 colnames(data16S) <- gsub("X16S.Behnsen.MY.", "MY", colnames(data16S))
 colnames(data16S) <- gsub("X16S.Negative.Control.sample2", "Negative Control 1", colnames(data16S))
@@ -64,13 +64,6 @@ physeqFe = phyloseq(otu_table(asvdata16S_matrix, taxa_are_rows = TRUE), tax_tabl
 random_treeFe = rtree(ntaxa(physeqFe), rooted=TRUE, tip.label=taxa_names(physeqFe))
 physeq16Fe = merge_phyloseq(physeqFe, random_treeFe)
 
-
-JAX <- c("MY12", "MY13", "MY14", "MY15", "MY16", "MY30", "MY31", "MY32", "MY33", "MY34", "MY63", "MY64")
-physeq16 <- subset_samples(physeq16, !(Samples %in% JAX))
-
-LM485_50ppm <- c("MY7", "MY8", "MY9", "MY10", "MY11","MY22", "MY23", "MY24", "MY25", "MY26")
-physeq16_Fe <- subset_samples(physeq16, (Samples %in% LM485_50ppm))
-
 ################### Theme Setup ###################
 display.brewer.all(colorblindFriendly = TRUE)
 pal <- brewer.pal(n = 12, name = "Paired")
@@ -90,21 +83,27 @@ cleanbg <- theme(panel.background = element_blank(),
                  panel.border = element_rect(fill = NA, color = "black"), 
                  text = element_text(family = "Arial", size = 25))
 dietcol <- scale_fill_manual(values = c("#1F78B4", "#E31A1C"))
-Dietgroup <- c("chow LM485", "chow LM485", "chow LM485", "chow LM485", "chow LM485", "purified 50ppm iron", "purified 50ppm iron", "purified 50ppm iron", "purified 50ppm iron", "purified 50ppm iron")
+Dietgroup <- c("chow LM485", "chow LM485", "purified 50ppm iron", "purified 50ppm iron", "purified 50ppm iron", "purified 50ppm iron", "purified 50ppm iron", "chow LM485", "chow LM485", "chow LM485")
 box_aes <- theme(panel.background = element_blank(), 
                  panel.border = element_rect(fill = NA, color = "black"), 
                  text = element_text(family = "Arial", size = 25), 
                  aspect.ratio = 1)
 
-################### Pyramid Plots ###################
-glom_rel_16 <- psmelt(phyloseq::transform_sample_counts(gen.glom.16Fe, function(x){x / sum(x)}))
-glom_rel_16$Genus[glom_rel_16$Abundance < 0.05] <- "Other <5%"
+JAX <- c("MY12", "MY13", "MY14", "MY15", "MY16", "MY30", "MY31", "MY32", "MY33", "MY34", "MY63", "MY64")
+physeq16Fe <- subset_samples(physeq16Fe, !(Samples %in% JAX))
 
-glom_rel16 <- glom_rel_16 %>% mutate(AbundInv = ifelse(Diet == "chow LM485", Abundance*-1, Abundance))
-glom_rel16$Diet <- factor(glom_rel_16$Diet, levels = c("chow LM485", "purified 50ppm iron"))
+LM485_50ppm <- c("MY7", "MY8", "MY9", "MY10", "MY11","MY22", "MY23", "MY24", "MY25", "MY26")
+physeq16_Fe <- subset_samples(physeq16Fe, (Samples %in% LM485_50ppm))
 
+################### Pyramid Plots  ################### 
 dummy <- data.frame(Mouse = c("UIC107", "UIC107"), AbundInv = c(-1,1), Diet = c("chow LM485", "purified 50ppm iron"))
 dummy$Diet <- factor(dummy$Diet, levels = c("chow LM485", "purified 50ppm iron"))
+
+gen.glom.16Fe <- tax_glom(physeq16_Fe, taxrank = rank_names(physeq16_Fe)[6], NArm = FALSE)
+glom_rel_16 <- psmelt(phyloseq::transform_sample_counts(gen.glom.16Fe, function(x){x / sum(x)}))
+glom_rel_16$Genus[glom_rel_16$Abundance < 0.05] <- "Other <5%"
+glom_rel16 <- glom_rel_16 %>% mutate(AbundInv = ifelse(Diet == "chow LM485", Abundance*-1, Abundance))
+glom_rel16$Diet <- factor(glom_rel_16$Diet, levels = c("chow LM485", "purified 50ppm iron"))
 
 pyramid_16S <- ggplot(glom_rel16, aes(x = Mouse, y = AbundInv, fill = Mouse)) + 
   ylab("Relative Abundance") +
@@ -120,6 +119,7 @@ png(filename = "16S abund pyramid chart purified iron.png", width = 3600, height
 plot(pyramid_16S)
 dev.off()
 
+###Table
 Abund.table.purified.16S <- glom_rel16 %>% 
   select(OTU, Abundance, Mouse, Diet, Kingdom, Phylum, Class, Order, Family, Genus) %>% 
   filter(Abundance > 0) %>% 
@@ -127,11 +127,12 @@ Abund.table.purified.16S <- glom_rel16 %>%
 
 write_xlsx(Abund.table.purified.16S, "Relative Abundance 50ppm 16S Pyramid.xlsx")
 
-################### Alpha Diversity ###################
+################### Alpha Diversity  ################### 
 tab_16S_50ppm <- microbiome::alpha(physeq16_Fe, index = "all")
+tab_16S_50ppm$Dietgroup <- Dietgroup
 write_xlsx(tab_16S_50ppm, "Alpha Diversity 50ppm 16S.xlsx")
 
-################### Beta Diversity ###################
+################### Beta Diversity  ################### 
 sample_data(physeq16_Fe)$Diet <- factor(sample_data(physeq16_Fe)$Diet, levels = c("chow LM485", "purified 50ppm iron"))
 DistBC = distance(physeq16_Fe, method = "bray")
 ordBC = ordinate(physeq16_Fe, method="PCoA", distance = DistBC)
@@ -144,6 +145,7 @@ PCoA16S <- plot_ordination(physeq16_Fe, ordBC, color = "Diet", shape = "Diet", l
 png(filename = "PCoA 16S chow LM485 to 50ppm.png", width = 2400, height = 2400, units = "px", res = 300)
 plot(PCoA16S)
 dev.off()
+
 
 ################### References ###################
 citation(package="ggplot2")

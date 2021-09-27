@@ -115,8 +115,9 @@ plot(pyramid_16S)
 dev.off()
 
 Abund.table.purified.16S <- glom_rel16 %>% 
-select(OTU, Abundance, Mouse, Diet, Kingdom, Phylum, Class, Order, Family, Genus) %>% 
-filter(Abundance > 0) %>% arrange(Mouse, desc(Diet))
+  select(OTU, Abundance, Mouse, Diet, Kingdom, Phylum, Class, Order, Family, Genus) %>% 
+  filter(Abundance > 0) %>% 
+  arrange(Mouse, desc(Diet))
 
 write_xlsx(Abund.table.purified.16S, "Relative Abundance 50ppm 16S Pyramid.xlsx")
 

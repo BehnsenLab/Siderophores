@@ -119,7 +119,7 @@ ITSpyramid <- ggplot(glom_rel2, aes(x = Mouse, y = AbundInv, fill = Mouse)) +
   scale_y_continuous(labels = abs, expand = c(0,0)) +
   geom_blank(data = dummy16)
 
-png(filename = "ITS abund pyramid chart chow 2914.png", width = 3600, height = 2400, units = "px", res = 300)
+png(filename = "ITS abund pyramid chart chow 2914.png", width = 4800, height = 3600, units = "px", res = 300)
 plot(ITSpyramid)
 dev.off()
 

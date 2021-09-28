@@ -117,7 +117,7 @@ ITSpyramid2 <- ggplot(glom_rel5, aes(x = Mouse, y = AbundInv, fill = Mouse)) +
   scale_y_continuous(labels = abs, expand = c(0,0)) +
   geom_blank(data = dummy) 
 
-png(filename = "ITS abund pyramid chart purified iron.png", width = 3600, height = 2400, units = "px", res = 300)
+png(filename = "ITS abund pyramid chart purified iron.png", width = 4800, height = 3600, units = "px", res = 300)
 plot(ITSpyramid2)
 dev.off()
 

@@ -72,62 +72,162 @@ physeq18_Fe <- subset_samples(physeq18Fe, (Samples %in% LM485_50ppm))
 ################### Theme Setup ###################
 display.brewer.all(colorblindFriendly = TRUE)
 pal <- brewer.pal(n = 12, name = "Paired")
-pal_darker <- pal %>% adjust_luminance(-2)
-pal_lighter <- pal %>% adjust_luminance(2)
-pal_med_dark <- pal %>% adjust_luminance(-1.5)
+pal1 <- brewer.pal(n = 7, name = "Set2")
+pal2 <- brewer.pal(n = 7, name = "Dark2")
 
+pal_dark1.25 <- pal %>% 
+  adjust_luminance(-1.25)
+pal_dark2 <- pal %>% 
+  adjust_luminance(-2)
 
-pyramid.theme <- theme(axis.text.y = element_blank(), 
-                       axis.ticks.y = element_blank(),
-                       text = element_text(family = "Arial", size = 25), 
-                       strip.text.y = element_text(angle = 0, face = "italic"), 
-                       panel.spacing.x = unit(0, "lines"), 
-                       strip.background = element_rect(color = "black"), 
-                       panel.background = element_part_rect("tblr", color = "black", fill = "white"))
+pal1_dark1.25 <- pal1 %>% 
+  adjust_luminance(-1.25)
+pal1_dark2 <- pal1 %>% 
+  adjust_luminance(-2)
+
+pal2_dark1.25 <- pal2 %>% 
+  adjust_luminance(-1.25)
+pal2_dark2 <- pal2 %>% 
+  adjust_luminance(-2)
+
+pal_med_1.25 <- pal %>% 
+  adjust_luminance(1.25)
+pal_light2 <- pal %>% 
+  adjust_luminance(2)
+
+pal1_med_1.25 <- pal1 %>% 
+  adjust_luminance(1.25)
+pal1_light2 <- pal1 %>% 
+  adjust_luminance(2)
+
+pal2_med_1.25 <- pal2 %>% 
+  adjust_luminance(1.25)
+pal2_light2 <- pal2 %>% 
+  adjust_luminance(2)
+
+palettemix1 <- c(pal_dark1.25[1:2], 
+                 pal_med_1.25[1:2], 
+                 pal_dark1.25[3:4], 
+                 pal_med_1.25[3:4], 
+                 pal_dark1.25[5:6], 
+                 pal_med_1.25[5:6], 
+                 pal_dark1.25[7:8], 
+                 pal_med_1.25[7:8], 
+                 pal_dark1.25[9:10], 
+                 pal_med_1.25[9:10], 
+                 pal_dark1.25[11:12], 
+                 pal_med_1.25[11:12], 
+                 pal_dark2[1:2], 
+                 pal_light2[1:2], 
+                 pal_dark2[3:4], 
+                 pal_light2[3:4], 
+                 pal_dark2[5:6], 
+                 pal_light2[5:6], 
+                 pal_dark2[7:8], 
+                 pal_light2[7:8], 
+                 pal_dark2[9:10], 
+                 pal_light2[9:10], 
+                 pal_dark2[11:12], 
+                 pal_light2[11:12])
+
+palettemix2 <- c(pal1_dark1.25[1:2], 
+                 pal1_med_1.25[1:2], 
+                 pal1_dark1.25[3:4], 
+                 pal1_med_1.25[3:4], 
+                 pal1_dark1.25[5:6], 
+                 pal1_med_1.25[5:6], 
+                 pal1_dark1.25[7], 
+                 pal1_med_1.25[7], 
+                 pal1_dark2[1:2], 
+                 pal1_light2[1:2], 
+                 pal1_dark2[3:4], 
+                 pal1_light2[3:4], 
+                 pal1_dark2[5:6], 
+                 pal1_light2[5:6], 
+                 pal1_dark2[7], 
+                 pal1_light2[7])
+
+palettemix3 <- c(pal2_dark1.25[1:2], 
+                 pal2_med_1.25[1:2], 
+                 pal2_dark1.25[3:4], 
+                 pal2_med_1.25[3:4], 
+                 pal2_dark1.25[5:6], 
+                 pal2_med_1.25[5:6], 
+                 pal2_dark1.25[7], 
+                 pal2_light2[7],
+                 pal2_dark2[1:2], 
+                 pal2_light2[1:2], 
+                 pal2_dark2[3:4], 
+                 pal2_light2[3:4], 
+                 pal2_dark2[5:6], 
+                 pal2_light2[5:6], 
+                 pal2_dark2[7], 
+                 pal2_light2[7])
+
+custom.pal <- c(palettemix1, palettemix2, palettemix3)
 
 cleanbg <- theme(panel.background = element_blank(), 
                  panel.border = element_rect(fill = NA, color = "black"), 
-                 text = element_text(family = "Arial", size = 25))
+                 text = element_text(family = "Arial", size = 50))
+
+rel.abund.theme <- theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 0.75), 
+        panel.background = element_blank(), 
+        text = element_text(family = "Arial", size = 50), 
+        legend.text.align = 0)
+
 dietcol <- scale_fill_manual(values = c("#1F78B4", "#E31A1C"))
+
 Dietgroup <- c("chow LM485", "chow LM485", "purified 50ppm iron", "purified 50ppm iron", "purified 50ppm iron", "purified 50ppm iron", "purified 50ppm iron", "chow LM485", "chow LM485", "chow LM485")
+
 box_aes <- theme(panel.background = element_blank(), 
                  panel.border = element_rect(fill = NA, color = "black"), 
                  text = element_text(family = "Arial", size = 25), 
                  aspect.ratio = 1)
 
-
-
-################### Pyramid Plots  ################### 
-dummy <- data.frame(Mouse = c("UIC107", "UIC107"), AbundInv = c(-1,1), Diet = c("chow LM485", "purified 50ppm iron"))
-dummy$Diet <- factor(dummy$Diet, levels = c("chow LM485", "purified 50ppm iron"))
-
+################### Stacked Relative Abundance  ################### 
 gen.glom.ITSFe <- tax_glom(physeq18_Fe, taxrank = rank_names(physeq18_Fe)[6], NArm = FALSE)
-glom_rel4 <- psmelt(phyloseq::transform_sample_counts(gen.glom.ITSFe, function(x){x / sum(x)}))
-glom_rel4$Genus[glom_rel4$Abundance < 0.05] <- "Other <5%"
-glom_rel5 <- glom_rel4 %>% mutate(AbundInv = ifelse(Diet == "chow LM485", Abundance*-1, Abundance))
-glom_rel5$Diet <- factor(glom_rel5$Diet, levels = c("chow LM485", "purified 50ppm iron"))
+glom_rel_gen_ITSFe <- psmelt(phyloseq::transform_sample_counts(gen.glom.ITSFe, function(x){x / sum(x)}))
+glom_rel_gen_ITSFe$Genus[glom_rel_gen_ITSFe$Abundance<0.01] <- "Other <1%"
 
-ITSpyramid2 <- ggplot(glom_rel5, aes(x = Mouse, y = AbundInv, fill = Mouse)) + 
-  ylab("Relative Abundance") +
-  geom_bar(stat = "identity", position = "stack", width = 1) + 
-  facet_grid(Genus~Diet, scales = "free_x",  space = "free_x")+ 
-  coord_flip() + 
-  pyramid.theme +
-  geom_hline(yintercept = 0) + 
-  scale_y_continuous(labels = abs, expand = c(0,0)) +
-  geom_blank(data = dummy) 
+gen.legend.ITSFe <- glom_rel_gen_ITSFe %>% 
+  select(Genus) %>% 
+  filter(Genus !=  "Other <1%") %>% 
+  arrange(Genus)
+gen.legend.ITSFe.list <- as.list(unique(gen.legend.ITSFe$Genus))
+italic.gen.legend.ITSFe <- mixedFontLabel(gen.legend.ITSFe.list, italic = TRUE)
 
-png(filename = "ITS abund pyramid chart purified iron.png", width = 4800, height = 3600, units = "px", res = 300)
-plot(ITSpyramid2)
+#Color palette
+gen.legend.ITSFe.list2 <- gen.legend.ITSFe.list
+names(gen.legend.ITSFe.list2) <- as.list(custom.pal[50:99])
+col50 <- c(custom.pal[50:99], "#666666")
+write_xlsx(as.data.frame(gen.legend.ITSFe.list2), "gen.legend.ITSFe palette.xlsx")
+
+
+relabund_ITS_50ppm_Gen <- ggplot(glom_rel_gen_ITSFe, aes(x = Mouse, y = Abundance, fill = Genus)) +
+  geom_bar(aes(), color = "black", stat = "identity", position = "stack", width = 0.95) + 
+  facet_wrap(~factor(Diet, levels = c("chow LM485", "purified 50ppm iron")), scales = "free", nrow = 1) + 
+  labs(x = "", y = "Relative Abundance\n", title = "ITS") + 
+  rel.abund.theme + 
+  scale_fill_manual(values = col50, labels = c(italic.gen.legend.ITSFe, "Other <1%")) +
+  scale_y_continuous(expand = c(0.005,0.005)) +
+  theme(legend.position = "right") +
+  guides(fill = guide_legend(ncol = 2))
+
+png(filename = "Relative Abundance_ITS_50ppm_Genera.png", width = 12000, height = 9600, units = "px", res = 300)
+plot(relabund_ITS_50ppm_Gen)
 dev.off()
 
-###Table
-Abund.table.purified.ITS <- glom_rel5 %>% 
+relabund.ITS.50ppm.genera.legend.fig <-get_legend(relabund_ITS_50ppm_Gen)
+png(filename = "Relative Abundance_ITS_50ppm_Genera legend.png", width = 12000, height = 9600, units = "px", res = 300)
+plot(relabund.ITS.50ppm.genera.legend.fig)
+dev.off()
+
+relabund.ITS.purified <- glom_rel_gen_ITSFe %>% 
   select(OTU, Abundance, Mouse, Diet, Kingdom, Phylum, Class, Order, Family, Genus) %>% 
   filter(Abundance > 0) %>% 
   arrange(Mouse, desc(Diet))
 
-write_xlsx(Abund.table.purified.ITS, "Relative Abundance 50ppm ITS Pyramid.xlsx")
+write_xlsx(relabund.ITS.purified, "Table S3 - Relative Abundance 50ppm ITS.xlsx")
 
 ################### Alpha Diversity  ################### 
 tab_18S_50ppm <- microbiome::alpha(physeq18_Fe, index = "all")
@@ -143,7 +243,7 @@ PCoAITS <- plot_ordination(physeq18_Fe, ordBCITS, color = "Diet", shape = "Diet"
   cleanbg + 
   scale_color_manual(values = c("#1F78B4", "#E31A1C")) + 
   ggtitle("ITS")
-png(filename = "PCoA ITS chow LM485 to 50ppm.png", width = 2400, height = 2400, units = "px", res = 300)
+png(filename = "PCoA ITS chow LM485 to 50ppm.png", width = 4800, height = 3600, units = "px", res = 300)
 plot(PCoAITS)
 dev.off()
 

@@ -71,21 +71,108 @@ physeq16_noyeast <- subset_samples(physeq16, (Samples %in% noyeast))
 ################### Theme Setup ###################
 display.brewer.all(colorblindFriendly = TRUE)
 pal <- brewer.pal(n = 12, name = "Paired")
-pal_darker <- pal %>% adjust_luminance(-2)
-pal_lighter <- pal %>% adjust_luminance(2)
-pal_med_dark <- pal %>% adjust_luminance(-1.5)
+pal1 <- brewer.pal(n = 7, name = "Set2")
+pal2 <- brewer.pal(n = 7, name = "Dark2")
 
-pyramid.theme <- theme(axis.text.y = element_blank(), 
-                       axis.ticks.y = element_blank(),
-                       text = element_text(family = "Arial", size = 25), 
-                       strip.text.y = element_text(angle = 0, face = "italic"), 
-                       panel.spacing.x = unit(0, "lines"), 
-                       strip.background = element_rect(color = "black"), 
-                       panel.background = element_part_rect("tblr", color = "black", fill = "white"))
+pal_dark1.25 <- pal %>% 
+  adjust_luminance(-1.25)
+pal_dark2 <- pal %>% 
+  adjust_luminance(-2)
+
+pal1_dark1.25 <- pal1 %>% 
+  adjust_luminance(-1.25)
+pal1_dark2 <- pal1 %>% 
+  adjust_luminance(-2)
+
+pal2_dark1.25 <- pal2 %>% 
+  adjust_luminance(-1.25)
+pal2_dark2 <- pal2 %>% 
+  adjust_luminance(-2)
+
+pal_med_1.25 <- pal %>% 
+  adjust_luminance(1.25)
+pal_light2 <- pal %>% 
+  adjust_luminance(2)
+
+pal1_med_1.25 <- pal1 %>% 
+  adjust_luminance(1.25)
+pal1_light2 <- pal1 %>% 
+  adjust_luminance(2)
+
+pal2_med_1.25 <- pal2 %>% 
+  adjust_luminance(1.25)
+pal2_light2 <- pal2 %>% 
+  adjust_luminance(2)
+
+palettemix1 <- c(pal_dark1.25[1:2], 
+                 pal_med_1.25[1:2], 
+                 pal_dark1.25[3:4], 
+                 pal_med_1.25[3:4], 
+                 pal_dark1.25[5:6], 
+                 pal_med_1.25[5:6], 
+                 pal_dark1.25[7:8], 
+                 pal_med_1.25[7:8], 
+                 pal_dark1.25[9:10], 
+                 pal_med_1.25[9:10], 
+                 pal_dark1.25[11:12], 
+                 pal_med_1.25[11:12], 
+                 pal_dark2[1:2], 
+                 pal_light2[1:2], 
+                 pal_dark2[3:4], 
+                 pal_light2[3:4], 
+                 pal_dark2[5:6], 
+                 pal_light2[5:6], 
+                 pal_dark2[7:8], 
+                 pal_light2[7:8], 
+                 pal_dark2[9:10], 
+                 pal_light2[9:10], 
+                 pal_dark2[11:12], 
+                 pal_light2[11:12])
+
+palettemix2 <- c(pal1_dark1.25[1:2], 
+                 pal1_med_1.25[1:2], 
+                 pal1_dark1.25[3:4], 
+                 pal1_med_1.25[3:4], 
+                 pal1_dark1.25[5:6], 
+                 pal1_med_1.25[5:6], 
+                 pal1_dark1.25[7], 
+                 pal1_med_1.25[7], 
+                 pal1_dark2[1:2], 
+                 pal1_light2[1:2], 
+                 pal1_dark2[3:4], 
+                 pal1_light2[3:4], 
+                 pal1_dark2[5:6], 
+                 pal1_light2[5:6], 
+                 pal1_dark2[7], 
+                 pal1_light2[7])
+
+palettemix3 <- c(pal2_dark1.25[1:2], 
+                 pal2_med_1.25[1:2], 
+                 pal2_dark1.25[3:4], 
+                 pal2_med_1.25[3:4], 
+                 pal2_dark1.25[5:6], 
+                 pal2_med_1.25[5:6], 
+                 pal2_dark1.25[7], 
+                 pal2_light2[7],
+                 pal2_dark2[1:2], 
+                 pal2_light2[1:2], 
+                 pal2_dark2[3:4], 
+                 pal2_light2[3:4], 
+                 pal2_dark2[5:6], 
+                 pal2_light2[5:6], 
+                 pal2_dark2[7], 
+                 pal2_light2[7])
+
+custom.pal <- c(palettemix1, palettemix2, palettemix3)
 
 cleanbg <- theme(panel.background = element_blank(), 
                  panel.border = element_rect(fill = NA, color = "black"), 
-                 text = element_text(family = "Arial", size = 25))
+                 text = element_text(family = "Arial", size = 50))
+
+rel.abund.theme <- theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 0.75), 
+        panel.background = element_blank(), 
+        text = element_text(family = "Arial", size = 50), 
+        legend.text.align = 0)
 
 dietcol <- scale_fill_manual(values = c("#1F78B4", "#33A02C"))
 
@@ -96,38 +183,64 @@ box_aes <- theme(panel.background = element_blank(),
                  aspect.ratio = 1)
 
 cellhosttheme <- theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 0.75), 
-                       text = element_text(family = "Arial", size = 25))
+                       text = element_text(family = "Arial", size = 50))
 
-################### Pyramid Plots ###################
-dummy16 <- data.frame(Mouse = c("UIC127", "UIC127"), AbundInv = c(-1,1), Diet = c("chow LM485", "chow 2914"))
-dummy16$Diet <- factor(dummy16$Diet, levels = c("chow LM485", "chow 2914"))
-
+################### Stacked Relative Abundance ###################
 gen.glom.16 <- tax_glom(physeq16_noyeast, taxrank = rank_names(physeq16_noyeast)[6], NArm = FALSE)
-glom_rel1 <- psmelt(phyloseq::transform_sample_counts(gen.glom.16, function(x){x / sum(x)}))
-glom_rel1$Genus[glom_rel1$Abundance < 0.05] <- "Other <5%"
-glom_rel1 <- glom_rel1 %>% mutate(AbundInv = ifelse(Diet == "chow LM485", Abundance*-1, Abundance))
-glom_rel1$Diet <- factor(glom_rel1$Diet, levels = c("chow LM485", "chow 2914"))
+glom_rel_gen_noyeast16 <- psmelt(phyloseq::transform_sample_counts(gen.glom.16, function(x){x / sum(x)}))
+glom_rel_gen_noyeast16$Genus[glom_rel_gen_noyeast16$Abundance<0.01] <- "Other <1%"
 
-pyramid <- ggplot(glom_rel1, aes(x = Mouse, y = AbundInv, fill = Mouse)) + 
-  ylab("Relative Abundance") +
-  geom_bar(stat = "identity", position = "stack", width = 1) + 
-  facet_grid(Genus ~ Diet, scales = "free_x",  space = "free_x") + 
-  coord_flip() + 
-  pyramid.theme +
-  geom_hline(yintercept = 0) + 
-  scale_y_continuous(labels = abs, expand = c(0,0)) +
-  geom_blank(data = dummy16)
+gen.legend.16S.noyeast <- glom_rel_gen_noyeast16 %>% 
+  select(Genus) %>% 
+  filter(Genus !=  "Other <1%") %>% 
+  arrange(Genus)
+glom_rel_gen_noyeast16_list <- as.list(unique(gen.legend.16S.noyeast$Genus))
+italic.gen.legend.16S.noyeast <- mixedFontLabel(glom_rel_gen_noyeast16_list, italic = TRUE)
 
-png(filename = "16S abund pyramid chart chow 2914.png", width = 4800, height = 3600, units = "px", res = 300)
-plot(pyramid)
+#Color setup 
+write_xlsx(as.data.frame(glom_rel_gen_noyeast16_list), "gen_legend_16Snoyeast_palette.xlsx")
+
+col13 <- c( "#1F78B4", 
+            "#A6761D", 
+            "#B2DF8A", 
+            "#E6AB02", 
+            "#FF7F00", 
+            "#CAB2D6", 
+            "#66A61E", 
+            "#B15928", 
+            "#66C2A5", 
+            "#FC8D62", 
+            "#8DA0CB", 
+            "#FFD92F", 
+            "#E5C494", 
+            "#D95F02", 
+            "#666666")  
+
+relabund_16S_noyeast_Gen <- ggplot(glom_rel_gen_noyeast16, aes(x = Mouse, y = Abundance, fill = Genus)) +
+  geom_bar(color = "black", stat = "identity", position = "stack", width = 0.95) +
+  facet_wrap(~factor(Diet, levels = c("chow LM485", "chow 2914")), scales = "free", nrow = 1) + 
+  labs(x = "", y = "Relative Abundance\n", title = "16S") + 
+  rel.abund.theme + 
+  scale_fill_manual(values = col13, labels = c(italic.gen.legend.16S.noyeast, "Other <1%")) +
+  scale_y_continuous(expand = c(0.005,0.005)) +
+  theme(legend.position = "right") +
+  guides(fill = guide_legend(ncol = 1))
+
+png(filename = "Relative Abundance_16S_NoYeast_Genera.png", width = 12000, height = 9600, units = "px", res = 300)
+plot(relabund_16S_noyeast_Gen)
 dev.off()
 
-###Table
-Abund.table.noyeast.16S <- glom_rel1 %>% 
+relabund.16S.noyeast.genera.legend.fig <-get_legend(relabund_16S_noyeast_Gen)
+png(filename = "Relative Abundance_16S_NoYeast_Genera legend.png", width = 12000, height = 9600, units = "px", res = 300)
+plot(relabund.16S.noyeast.genera.legend.fig)
+dev.off()
+
+relabund.16S.noyeast <- glom_rel_gen_noyeast16 %>% 
   select(OTU, Abundance, Mouse, Diet, Kingdom, Phylum, Class, Order, Family, Genus) %>% 
   filter(Abundance > 0) %>% 
   arrange(Mouse, desc(Diet))
-write_xlsx(Abund.table.noyeast.16S, "Relative Abundance No Yeast 16S Pyramid.xlsx")
+
+write_xlsx(relabund.16S.noyeast, "Table S5 - Relative Abundance No Yeast 16S.xlsx")
 
 ################### Alpha Diversity  ################### 
 tab_16S_noyeast <- microbiome::alpha(physeq16_noyeast, index = "all")
@@ -145,7 +258,7 @@ PCoA16Snoyeast <- plot_ordination(physeq16_noyeast, ordBCnoyeast, color = "Diet"
   cleanbg + 
   scale_color_manual(values = c("#1F78B4", "#33A02C")) + 
   ggtitle("16S")
-png(filename = "PCoA 16S No Yeast.png", width = 2400, height = 2400, units = "px", res = 300)
+png(filename = "PCoA 16S No Yeast.png", width = 4800, height = 3600, units = "px", res = 300)
 plot(PCoA16Snoyeast)
 dev.off()
 
